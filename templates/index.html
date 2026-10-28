@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>팍스 로마나 데일리 · 한국어 번역 피드</title>
+<meta name="description" content="AS 로마의 경기·전술·선수 칼럼·팬 블로그·레딧을 매일 한국어로 번역하는 팬 사이트">
+<meta property="og:title" content="팍스 로마나 데일리">
+<meta property="og:description" content="AS 로마의 경기, 전술 분석, 팀 칼럼, 팬 반응을 매일 한국어로 번역합니다.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a4d9c">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a4d9c'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>A</text></svg>">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f3f5f8;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --text: #15181e;
+    --muted: #69707d;
+    --line: #e4e8ee;
+    --accent: #0a4d9c;
+    --accent-soft: #e8f1fc;
+    --hot: #c2410c;
+    --hot-soft: #fff3e8;
+    --radius: 18px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px rgba(16, 24, 40, .04);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1c232c;
+    --text: #e6edf3;
+    --muted: #9198a1;
+    --line: #283039;
+    --accent: #7cb7ff;
+    --accent-soft: #17283d;
+    --hot: #fb923c;
+    --hot-soft: #2b1c10;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { width: min(100% - 32px, 880px); margin: 0 auto; }
+
+  /* header */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 18px 0;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand-mark {
+    width: 42px; height: 42px; flex: none; border-radius: 13px;
+    display: grid; place-items: center;
+    color: #fff; font-weight: 800; font-size: 20px; letter-spacing: -.5px;
+    background: linear-gradient(145deg, #0a4d9c, #1677d2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+  }
+  .brand strong { display: block; font-size: 18px; letter-spacing: -.55px; line-height: 1.2; white-space: nowrap; }
+  .brand small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+  .count-pill {
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); border-radius: 999px; padding: 7px 12px;
+    white-space: nowrap;
+  }
+  .icon-btn {
+    width: 38px; height: 38px; border: 1px solid var(--line); background: var(--surface);
+    border-radius: 11px; display: grid; place-items: center; font-size: 16px;
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+
+  /* filters */
+  .filters { background: var(--surface); border-bottom: 1px solid var(--line); padding: 14px 0 12px; }
+  .team-strip {
+    display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px;
+    scrollbar-width: none;
+  }
+  .team-strip::-webkit-scrollbar { display: none; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line); background: var(--surface);
+    padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    white-space: nowrap; color: var(--muted);
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .chip:hover { border-color: #c8d2df; background: var(--surface-2); }
+  .chip.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c, #999); flex: none; }
+  .chip.active .dot { box-shadow: 0 0 0 2px rgba(255, 255, 255, .25); }
+  .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .source-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .source-tab {
+    border: 1px solid transparent; background: transparent; color: var(--muted);
+    font-size: 13px; font-weight: 700; padding: 8px 11px; border-radius: 9px;
+  }
+  .source-tab:hover { background: var(--surface-2); }
+  .source-tab.active { color: var(--accent); background: var(--accent-soft); }
+  .search {
+    margin-left: auto; display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px;
+    background: var(--surface-2); min-width: 210px;
+  }
+  .search span { color: var(--muted); font-size: 15px; }
+  .search input { border: 0; outline: 0; background: transparent; width: 100%; font-size: 13px; }
+  .tag-strip { display: flex; gap: 7px; flex-wrap: wrap; padding-top: 10px; }
+  .tag-chip {
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--muted);
+    border-radius: 8px; padding: 5px 9px; font-size: 12px; font-weight: 650;
+  }
+  .tag-chip:hover { color: var(--text); }
+  .tag-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* sections */
+  main { padding: 26px 0 60px; }
+  .section { margin-bottom: 34px; }
+  .section-head { display: flex; align-items: baseline; gap: 10px; margin: 0 2px 14px; }
+  .section-head h2 { font-size: 17px; letter-spacing: -.3px; margin: 0; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 12px; }
+  .section-head .right { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .hot .section-head h2 { color: var(--hot); }
+
+  /* recent results */
+  .results {
+    display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 10px;
+    scroll-snap-type: x mandatory;
+  }
+  .results::-webkit-scrollbar { height: 7px; }
+  .results::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+  .result-card {
+    flex: none; min-width: 176px; scroll-snap-align: start;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 13px; padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .result-meta { font-size: 10.5px; color: var(--muted); margin-bottom: 5px; }
+  .result-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; font-weight: 700; }
+  .result-line + .result-line { margin-top: 3px; }
+  .result-score { font-size: 17px; font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+  .result-team { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .result-team .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+  .hot-list { display: grid; gap: 12px; }
+  .hot .card { border-color: #f3d3bb; }
+  [data-theme="dark"] .hot .card { border-color: #4a2d18; }
+
+  /* cards */
+  .card-list { display: grid; gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 16px 18px 12px; transition: border-color .15s, transform .15s;
+  }
+  .card:hover { border-color: #cfd8e3; }
+  [data-theme="dark"] .card:hover { border-color: #3a4552; }
+  .card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .source-name { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 750; }
+  .source-name .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, #999); }
+  .meta-dot { color: var(--muted); font-size: 11px; }
+  .meta-time { color: var(--muted); font-size: 12px; }
+  .muted { color: var(--muted); }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 750; border-radius: 6px; padding: 3px 7px;
+    background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+  }
+  .badge.hot { background: var(--hot-soft); color: var(--hot); border-color: transparent; }
+  .badge.interview { background: #f2edff; color: #6d3fd1; border-color: transparent; }
+  [data-theme="dark"] .badge.interview { background: #241b38; color: #b79cff; }
+  .badge.pending { background: #fff6d8; color: #9a6a00; border-color: transparent; }
+  [data-theme="dark"] .badge.pending { background: #342a10; color: #e9c46a; }
+  .top-badges { display: flex; gap: 5px; margin-left: auto; flex-wrap: wrap; }
+  .card-main { position: relative; margin-top: 9px; }
+  .card-main.has-thumb { min-height: 86px; }
+  .card-copy { min-width: 0; }
+  .card-main.has-thumb .card-copy { padding-right: 132px; }
+  .card h3 {
+    font-size: 17.5px; line-height: 1.4; letter-spacing: -.35px;
+    margin: 0 0 6px; font-weight: 760;
+  }
+  .card h3 a:hover { color: var(--accent); }
+  .summary {
+    margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.55;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .summary:empty { display: none; }
+  .thumb {
+    position: absolute; top: 0; right: 0;
+    width: 116px; height: 78px; border-radius: 11px; object-fit: cover;
+    background: var(--surface-2); border: 1px solid var(--line);
+  }
+  .card-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .mini-chip {
+    font-size: 11px; font-weight: 650; color: var(--muted);
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 2px 6px;
+  }
+  .mini-chip.team { color: var(--text); }
+  .mini-chip.team::before {
+    content: ""; display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--c); margin-right: 5px; vertical-align: 1px;
+  }
+  .match-line {
+    display: flex; align-items: center; gap: 7px; margin-top: 10px;
+    font-size: 12px; font-weight: 700; color: var(--hot);
+  }
+  .match-line .score {
+    background: var(--hot-soft); border-radius: 6px; padding: 2px 7px;
+    font-variant-numeric: tabular-nums; letter-spacing: .3px;
+  }
+  .card-actions {
+    display: flex; align-items: center; gap: 14px;
+    margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  }
+  .expand-btn {
+    border: 0; background: none; padding: 0; color: var(--accent);
+    font-size: 12.5px; font-weight: 750;
+  }
+  .expand-btn .chev { display: inline-block; transition: transform .2s; font-size: 11px; }
+  .card.open .expand-btn .chev { transform: rotate(180deg); }
+  .orig-link { margin-left: auto; color: var(--muted); font-size: 12px; font-weight: 650; }
+  .orig-link:hover { color: var(--text); }
+  .card-body { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .card.open .card-body { display: block; }
+  .body-note {
+    font-size: 12px; color: #8a5a00; background: #fff8e1; border-radius: 8px;
+    padding: 8px 10px; margin-bottom: 12px;
+  }
+  [data-theme="dark"] .body-note { color: #e9c46a; background: #2c2410; }
+  .body-note.trans { color: var(--accent); background: var(--accent-soft); }
+  .body-text p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.8; }
+  .body-text p:last-child { margin-bottom: 0; }
+  .comments { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .comments-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .comments-head h4 { margin: 0; font-size: 13px; }
+  .comments-head span { font-size: 11px; color: var(--muted); }
+  .comment { padding: 9px 11px; border-radius: 10px; background: var(--surface-2); margin-bottom: 7px; }
+  .comment-meta { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .comment p { margin: 0; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+
+  /* videos */
+  .video-row {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(230px, 250px);
+    gap: 12px; overflow-x: auto; padding: 2px 2px 10px; scroll-snap-type: x mandatory;
+  }
+  .video-row::-webkit-scrollbar { height: 8px; }
+  .video-row::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+  .video-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden; scroll-snap-align: start; box-shadow: var(--shadow);
+  }
+  .video-card:hover { border-color: #cfd8e3; }
+  .video-thumb { position: relative; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #16324f, #0a4d9c); }
+  .video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-thumb .play {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    color: #fff; font-size: 12px; letter-spacing: .5px;
+  }
+  .video-thumb .play b {
+    width: 38px; height: 38px; border-radius: 50%; background: rgba(0, 0, 0, .55);
+    display: grid; place-items: center; font-size: 14px; padding-left: 3px;
+    backdrop-filter: blur(3px);
+  }
+  .video-copy { padding: 10px 12px 12px; }
+  .video-channel { font-size: 10.5px; font-weight: 750; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .video-copy h3 { font-size: 13px; line-height: 1.45; margin: 4px 0 4px; letter-spacing: -.2px; }
+  .video-copy p { font-size: 11.5px; color: var(--muted); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .date-head {
+    display: flex; align-items: center; gap: 10px;
+    margin: 22px 2px 10px; color: var(--muted); font-size: 12px; font-weight: 750;
+  }
+  .date-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .date-head:first-child { margin-top: 0; }
+
+  .empty {
+    text-align: center; color: var(--muted); background: var(--surface);
+    border: 1px dashed var(--line); border-radius: var(--radius);
+    padding: 44px 20px; font-size: 13.5px;
+  }
+  .empty strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 6px; }
+
+  footer {
+    border-top: 1px solid var(--line); background: var(--surface);
+    padding: 26px 0 40px; color: var(--muted); font-size: 11.5px; line-height: 1.7;
+  }
+  footer p { margin: 0 0 7px; }
+  footer strong { color: var(--text); }
+  footer a { text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 640px) {
+    .wrap { width: min(100% - 22px, 880px); }
+    .header-inner { padding: 13px 0; }
+    .brand strong { font-size: 15px; letter-spacing: -.5px; }
+    .brand-mark { width: 36px; height: 36px; border-radius: 11px; font-size: 17px; }
+    .count-pill { display: none; }
+    .search { min-width: 100%; order: 5; margin-left: 0; }
+    .filter-bar { gap: 6px; }
+    .source-tab { padding: 6px 8px; }
+    .card { padding: 14px 14px 10px; border-radius: 15px; }
+    .card h3 { font-size: 16px; }
+    .card-main.has-thumb { min-height: 68px; }
+    .card-main.has-thumb .card-copy { padding-right: 96px; }
+    .thumb { width: 84px; height: 62px; border-radius: 9px; }
+    .summary { font-size: 13px; -webkit-line-clamp: 3; }
+    main { padding-top: 20px; }
+    .video-row { grid-auto-columns: minmax(210px, 78vw); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="./">
+      <span class="brand-mark">R</span>
+      <span>
+        <strong>팍스 로마나 데일리</strong>
+        <small id="updated">불러오는 중…</small>
+      </span>
+    </a>
+    <div class="header-actions">
+      <span class="count-pill" id="countPill"></span>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="다크 모드 전환" title="다크 모드 전환">◐</button>
+    </div>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="wrap">
+    <div class="team-strip" id="teamFilters" role="group" aria-label="팀 필터"></div>
+    <div class="filter-bar">
+      <div class="source-tabs" id="sourceTabs" role="group" aria-label="소스 필터"></div>
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="선수, 팀, 키워드 검색" autocomplete="off">
+      </label>
+    </div>
+    <div class="tag-strip" id="tagFilters" role="group" aria-label="태그 필터"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="section" id="resultsSection" hidden>
+    <div class="section-head">
+      <h2>최근 결과</h2>
+      <p>AS 로마</p>
+    </div>
+    <div class="results" id="resultsList"></div>
+  </section>
+
+  <section class="section hot" id="hotSection" hidden>
+    <div class="section-head">
+      <h2>경기 직후</h2>
+      <p>방금 끝난 경기 이야기부터</p>
+    </div>
+    <div class="hot-list" id="hotList"></div>
+  </section>
+
+  <section class="section" id="videoSection" hidden>
+    <div class="section-head">
+      <h2>팀 영상 · 쇼츠</h2>
+      <p>인터뷰와 하이라이트 모아보기</p>
+      <span class="right" id="videoCount"></span>
+    </div>
+    <div class="video-row" id="videoList"></div>
+  </section>
+
+  <section class="section" id="historySection" hidden>
+    <div class="section-head">
+      <h2>역사 · 팀 칼럼</h2>
+      <p>과거의 AS 로마</p>
+    </div>
+    <div class="card-list" id="historyList"></div>
+  </section>
+
+  <section class="section" id="feedSection">
+    <div class="section-head">
+      <h2>최신</h2>
+      <span class="right" id="resultInfo"></span>
+    </div>
+    <div id="feedList"></div>
+  </section>
+
+  <div id="emptyState" class="empty" hidden>
+    <strong>아직 모인 소식이 없어요</strong>
+    다음 수집을 기다려 주세요. 필터를 바꾸면 다른 글이 보일 수도 있어요.
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>팍스 로마나 데일리</strong>는 AS 로마와 무관한 비영리 개인 팬 사이트입니다. 광고·후원을 받지 않습니다.</p>
+    <p>모든 글은 AI가 요약·번역한 참고용 콘텐츠라 오역이 있을 수 있습니다. 원저작권은 ForzaRoma, Romanews, RomaPress, Chiesa di Totti, Sportellate, AS ROMA電子報告, Reddit 작성자 등 각 매체와 작성자에게 있으며 모든 카드에 원문 링크를 답니다.</p>
+    <p>선수 사진·구단 로고·영상 썸네일의 권리는 각 권리자에게 있습니다. 경기 결과 데이터는 <a href="https://www.thesportsdb.com" target="_blank" rel="noopener noreferrer">TheSportsDB</a>에서 제공받습니다. 삭제 요청은 <a href="mailto:you@example.com">you@example.com</a>으로 보내주시면 24시간 안에 처리하겠습니다.</p>
+    <p>Not affiliated with AS Roma or Serie A. Takedown requests handled within 24 hours.</p>
+  </div>
+</footer>
+
+<script>
+const DATA = __FEED_DATA__;
+
+const $ = (id) => document.getElementById(id);
+const state = { team: null, source: "all", tag: null, query: "" };
+const openCards = new Set();
+
+const esc = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[char]));
+
+const safeUrl = (value) => /^https?:\/\//i.test(value || "") ? esc(value) : "#";
+
+const teamsById = Object.fromEntries(DATA.teams.map((team) => [team.id, team]));
+const sources = DATA.sources || {};
+
+function teamName(id) {
+  return teamsById[id] ? teamsById[id].ko : id;
+}
+
+function teamChip(id) {
+  const team = teamsById[id];
+  if (!team) return "";
+  return `<span class="mini-chip team" style="--c:${esc(team.color)}">${esc(team.ko)}</span>`;
+}
+
+function timeAgo(iso) {
+  const time = new Date(iso).getTime();
+  if (!time) return "";
+  const minutes = Math.max(0, Math.floor((Date.now() - time) / 60000));
+  if (minutes < 1) return "방금";
+  if (minutes < 60) return `${minutes}분 전`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}시간 전`;
+  if (hours < 48) return "어제";
+  return new Intl.DateTimeFormat("ko-KR", { timeZone: DATA.timezone || "Asia/Seoul", month: "numeric", day: "numeric" }).format(new Date(iso));
+}
+
+function dateKey(iso) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: DATA.timezone || "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
+}
+
+function dateLabel(key) {
+  const now = new Date();
+  const todayKey = dateKey(now.toISOString());
+  const yesterdayKey = dateKey(new Date(now.getTime() - 86400000).toISOString());
+  const date = new Date(key + "T12:00:00Z");
+  const formatted = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: DATA.timezone || "Asia/Seoul", month: "long", day: "numeric", weekday: "short"
+  }).format(date);
+  if (key === todayKey) return `오늘 · ${formatted}`;
+  if (key === yesterdayKey) return `어제 · ${formatted}`;
+  return formatted;
+}
+
+function isHot(item) {
+  if (item.kind === "video") return false;
+  if (typeof item.hot === "boolean") return item.hot;
+  if (!item.match) return false;
+  const finished = new Date(item.match.finished_at).getTime();
+  if (!finished) return false;
+  const hours = (Date.now() - finished) / 3600000;
+  return hours >= 0 && hours <= (DATA.match_priority_hours || 24);
+}
+
+function matchLine(match) {
+  if (!match) return "";
+  const home = teamName(match.home);
+  const away = teamName(match.away);
+  const score = match.score ? `<span class="score">${esc(match.score)}</span>` : "";
+  return `<div class="match-line">${score}<span>${esc(home)} vs ${esc(away)}</span><span class="meta-dot">·</span><span>종료</span></div>`;
+}
+
+function resultCard(match) {
+  const home = teamsById[match.home];
+  const away = teamsById[match.away];
+  const date = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: DATA.timezone || "Asia/Seoul", month: "numeric", day: "numeric"
+  }).format(new Date(match.finished_at));
+  const round = match.round ? ` · ${match.round}라운드` : "";
+  return `
+  <div class="result-card">
+    <div class="result-meta">${esc(date)}${esc(round)}</div>
+    <div class="result-line">
+      <span class="result-team"><span class="dot" style="--c:${esc(home ? home.color : "#999")}"></span>${esc(teamName(match.home))}</span>
+      <span class="result-score">${esc(match.score || "-")}</span>
+    </div>
+    <div class="result-line">
+      <span class="result-team"><span class="dot" style="--c:${esc(away ? away.color : "#999")}"></span>${esc(teamName(match.away))}</span>
+    </div>
+  </div>`;
+}
+
+function badge(item) {
+  const list = [];
+  if (isHot(item)) list.push('<span class="badge hot">경기 직후</span>');
+  if (item.kind === "interview") list.push('<span class="badge interview">인터뷰</span>');
+  if (!item.translated && !item.original_only) list.push('<span class="badge pending" title="OPENCODE_API_KEY를 넣으면 번역됩니다">번역 대기</span>');
+  return list.length ? `<div class="top-badges">${list.join("")}</div>` : "";
+}
+
+function card(item) {
+  const meta = sources[item.source] || { label: item.source_label, color: "#888" };
+  const tags = (item.tags || []).map((tag) => `<span class="mini-chip">${esc(tag)}</span>`).join("");
+  const teamChips = (item.team_ids || []).map(teamChip).join("");
+  const thumb = item.image
+    ? `<img class="thumb" src="${safeUrl(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`
+    : "";
+  const isOpen = openCards.has(item.id);
+  const body = (item.body_ko || "").split(/\n+/).filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join("");
+  const comments = (item.comments || [])
+    .map((comment) => ({ ...comment, text: comment.body_ko || comment.body }))
+    .filter((comment) => comment.text);
+  const commentHtml = comments.length ? `
+    <div class="comments">
+      <div class="comments-head">
+        <h4>인기 댓글</h4><span>${item.translated ? "번역 · 말맛 유지" : "원문 · 번역 대기"}</span>
+      </div>
+      ${comments.map((comment) => `
+        <div class="comment">
+          <div class="comment-meta">u/${esc(comment.author || "?")} · ${esc(comment.score || 0)}점</div>
+          <p>${esc(comment.text)}</p>
+        </div>`).join("")}
+    </div>` : "";
+
+  return `
+  <article class="card${isOpen ? " open" : ""}" data-id="${esc(item.id)}">
+    <div class="card-top">
+      <span class="source-name" style="--c:${esc(meta.color)}"><span class="dot"></span>${esc(meta.label || item.source_label)}</span>
+      <span class="meta-dot">·</span>
+      <time class="meta-time" datetime="${esc(item.published)}">${esc(timeAgo(item.published))}</time>
+      ${badge(item)}
+    </div>
+    <div class="card-main${item.image ? " has-thumb" : ""}">
+      <div class="card-copy">
+        <h3><a href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title_ko || item.title)}</a></h3>
+        <p class="summary">${esc(item.summary_ko)}</p>
+      </div>
+      ${thumb}
+    </div>
+    ${matchLine(item.match)}
+    <div class="card-chips">${teamChips}${tags}</div>
+    <div class="card-actions">
+      <button class="expand-btn" type="button" data-expand="${esc(item.id)}">본문 번역 보기 <span class="chev">⌄</span></button>
+      <a class="orig-link" href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">원문 ↗</a>
+    </div>
+    <div class="card-body">
+      ${item.translated ? '<div class="body-note trans">AI 번역 · 원문의 약 80% 분량을 옮겼어요. 오역은 원문에서 확인해 주세요.</div>' : '<div class="body-note">아직 번역 전이에요. 아래는 원문(이탈리아어/영어)입니다.</div>'}
+      <div class="body-text">${body || '<p class="muted">본문이 제공되지 않은 글입니다. 원문에서 확인해 주세요.</p>'}</div>
+      ${commentHtml}
+    </div>
+  </article>`;
+}
+
+function videoCard(item) {
+  const meta = sources[item.source] || { label: item.source_label, color: "#f00" };
+  const team = item.video_team && item.video_team !== "seriea" ? `<span class="video-channel">${esc(teamName(item.video_team))}</span>` : `<span class="video-channel">${esc(item.video_channel || "Serie A")}</span>`;
+  const isShort = /shorts/i.test(item.url || "") || /#short|쇼츠|shorts/i.test(`${item.title} ${item.summary_ko}`);
+  const originalBadge = item.original_only ? '<span class="mini-chip">원본</span>' : "";
+  const thumb = item.image
+    ? `<img src="${safeUrl(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`
+    : "";
+  return `
+  <a class="video-card" href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">
+    <div class="video-thumb">${thumb}<span class="play"><b>▶</b></span></div>
+    <div class="video-copy">
+      <div style="display:flex;gap:6px;align-items:center">${team}${isShort ? '<span class="mini-chip">Shorts</span>' : ""}${originalBadge}</div>
+      <h3>${esc(item.title_ko || item.title)}</h3>
+      ${item.summary_ko ? `<p>${esc(item.summary_ko)}</p>` : ""}
+    </div>
+  </a>`;
+}
+
+function matchesFilter(item) {
+  if (state.team && !(item.team_ids || []).includes(state.team) && item.video_team !== state.team) return false;
+  if (state.source !== "all" && item.source !== state.source) return false;
+  if (state.tag && !(item.tags || []).includes(state.tag)) return false;
+  if (state.query) {
+    const haystack = `${item.title} ${item.title_ko} ${item.summary_ko} ${(item.team_names || []).join(" ")} ${(item.tags || []).join(" ")}`.toLowerCase();
+    if (!haystack.includes(state.query.toLowerCase())) return false;
+  }
+  return true;
+}
+
+function renderFilters() {
+  const focusTeams = (DATA.focus_team_ids || [])
+    .map((teamId) => teamsById[teamId])
+    .filter(Boolean);
+  const teamButtons = [`<button class="chip${state.team === null ? " active" : ""}" data-team="">전체</button>`]
+    .concat(focusTeams.map((team) => `
+      <button class="chip${state.team === team.id ? " active" : ""}" data-team="${esc(team.id)}">
+        <span class="dot" style="--c:${esc(team.color)}"></span>${esc(team.ko)}
+      </button>`));
+  $("teamFilters").innerHTML = teamButtons.join("");
+
+  const tabs = [{ key: "all", label: "전체" }, ...Object.entries(sources)
+    .filter(([key]) => key !== "youtube" && DATA.items.some((item) => item.source === key))
+    .map(([key, value]) => ({ key, label: value.label }))];
+  $("sourceTabs").innerHTML = tabs.map((tab) => `
+    <button class="source-tab${state.source === tab.key ? " active" : ""}" data-source="${esc(tab.key)}">${esc(tab.label)}</button>`).join("");
+
+  const counts = {};
+  DATA.items.forEach((item) => (item.tags || []).forEach((tag) => { counts[tag] = (counts[tag] || 0) + 1; }));
+  const tags = DATA.tags.filter((tag) => counts[tag]).map((tag) => `
+    <button class="tag-chip${state.tag === tag ? " active" : ""}" data-tag="${esc(tag)}">#${esc(tag)} ${counts[tag]}</button>`);
+  $("tagFilters").innerHTML = tags.join("");
+}
+
+function render() {
+  renderFilters();
+  const items = DATA.items.filter(matchesFilter);
+  const videos = items.filter((item) => item.kind === "video").sort((a, b) => new Date(b.published) - new Date(a.published));
+  const hotAll = items
+    .filter((item) => item.kind !== "video" && isHot(item))
+    .sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  const hot = hotAll.slice(0, 8);
+  const hotIds = new Set(hot.map((item) => item.id));
+  const history = items
+    .filter((item) => item.kind !== "video" && item.history && !hotIds.has(item.id))
+    .sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  const historyIds = new Set(history.map((item) => item.id));
+  const regular = items
+    .filter((item) => item.kind !== "video" && !hotIds.has(item.id) && !historyIds.has(item.id))
+    .sort((a, b) => new Date(b.published) - new Date(a.published));
+
+  $("hotSection").hidden = hot.length === 0;
+  $("hotList").innerHTML = hot.map(card).join("");
+
+  const results = DATA.recent_matches || [];
+  $("resultsSection").hidden = results.length === 0;
+  $("resultsList").innerHTML = results.slice(0, 6).map(resultCard).join("");
+
+  $("videoSection").hidden = videos.length === 0;
+  $("videoList").innerHTML = videos.slice(0, 12).map(videoCard).join("");
+  $("videoCount").textContent = videos.length ? `${videos.length}개` : "";
+
+  $("historySection").hidden = history.length === 0;
+  $("historyList").innerHTML = history.slice(0, 6).map(card).join("");
+
+  const groups = new Map();
+  regular.forEach((item) => {
+    const key = dateKey(item.published);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  });
+  const html = [];
+  groups.forEach((list, key) => {
+    html.push(`<div class="date-head">${esc(dateLabel(key))}</div><div class="card-list">${list.map(card).join("")}</div>`);
+  });
+  $("feedList").innerHTML = html.join("");
+  $("emptyState").hidden = items.length > 0;
+  $("resultInfo").textContent = `${regular.length}개 · ${state.team ? teamName(state.team) : "팍스 로마나"}`;
+  $("countPill").textContent = `새 글 ${DATA.items.length}`;
+}
+
+function setState(patch) {
+  Object.assign(state, patch);
+  render();
+}
+
+document.addEventListener("click", (event) => {
+  const teamButton = event.target.closest("[data-team]");
+  if (teamButton) return setState({ team: teamButton.dataset.team || null });
+
+  const sourceButton = event.target.closest("[data-source]");
+  if (sourceButton) return setState({ source: sourceButton.dataset.source });
+
+  const tagButton = event.target.closest("[data-tag]");
+  if (tagButton) {
+    const tag = tagButton.dataset.tag;
+    return setState({ tag: state.tag === tag ? null : tag });
+  }
+
+  const expand = event.target.closest("[data-expand]");
+  if (expand) {
+    const article = expand.closest(".card");
+    const id = expand.dataset.expand;
+    article.classList.toggle("open");
+    if (article.classList.contains("open")) openCards.add(id);
+    else openCards.delete(id);
+  }
+});
+
+$("search").addEventListener("input", (event) => setState({ query: event.target.value.trim() }));
+
+$("themeBtn").addEventListener("click", () => {
+  const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const next = current === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("seriea-theme", next); } catch (error) {}
+});
+
+(function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem("seriea-theme"); } catch (error) {}
+  document.documentElement.dataset.theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+})();
+
+(function initUpdated() {
+  const date = new Date(DATA.generated_at);
+  if (isNaN(date.getTime())) return;
+  const formatted = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: DATA.timezone || "Asia/Seoul", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false
+  }).format(date);
+  $("updated").textContent = `업데이트 · ${formatted} KST`;
+})();
+
+render();
+</script>
+</body>
+</html>

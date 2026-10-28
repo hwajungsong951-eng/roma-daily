@@ -1,0 +1,78 @@
+name: Roma feed
+
+on:
+  schedule:
+    # 매일 오전 1회: 07:00 KST (UTC 22:00)
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore feed cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/articles.json
+            data/cache.json
+            data/youtube_channels.json
+          key: seriea-feed-${{ github.run_id }}
+          restore-keys: |
+            seriea-feed-
+
+      - name: Fetch, translate, build
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_MODEL: ${{ vars.OPENCODE_MODEL || 'deepseek-v4.1-flash' }}
+          OPENCODE_REASONING_EFFORT: ${{ vars.OPENCODE_REASONING_EFFORT || 'none' }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: ${{ vars.REDDIT_USER_AGENT || 'seriea-feed/0.2 (personal non-profit Serie A fan feed)' }}
+          THESPORTSDB_API_KEY: ${{ secrets.THESPORTSDB_API_KEY || '123' }}
+        run: python pipeline.py
+
+      - name: Show stats
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path("data/articles.json")
+          if p.exists():
+              print(json.dumps(json.loads(p.read_text(encoding="utf-8"))["stats"], ensure_ascii=False, indent=2))
+          PY
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

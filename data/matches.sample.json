@@ -1,0 +1,16 @@
+[
+  {
+    "home": "inter",
+    "away": "milan",
+    "score": "1-0",
+    "finished_at": "2026-10-25T20:45:00+01:00",
+    "competition": "Serie A"
+  },
+  {
+    "home": "napoli",
+    "away": "roma",
+    "score": "2-1",
+    "finished_at": "2026-10-26T18:00:00+01:00",
+    "competition": "Serie A"
+  }
+]

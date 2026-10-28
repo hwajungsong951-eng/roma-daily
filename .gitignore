@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.ruff_cache/
+.env
+
+# 생성물 / 캐시
+data/raw.json
+data/articles.json
+data/cache.json
+data/youtube_channels.json
+site/index.html
+site/data/
+site/.nojekyll
