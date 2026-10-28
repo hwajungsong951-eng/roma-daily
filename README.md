@@ -308,35 +308,27 @@ python fetcher.py
 
 ---
 
-## 6. 배포 (Cloudflare Pages 권장)
+## 6. 배포 (GitHub Pages)
 
-NBA 데일리처럼 `*.pages.dev` 주소로 운영할 수 있습니다. 자세한 절차는 [DEPLOY.md](DEPLOY.md) 참고.
+저장소: https://github.com/hwajungsong951-eng/roma-daily  
+예상 주소: `https://hwajungsong951-eng.github.io/roma-daily/`
 
-1. 이 폴더를 GitHub 저장소에 push
-2. Cloudflare → **Workers & Pages → Create → Pages → Upload assets**
-   - 프로젝트 이름: `roma-daily`
-   - 주소: `https://roma-daily.pages.dev`
-3. GitHub **Settings → Secrets and variables → Actions**
-   - `OPENCODE_API_KEY`
+자세한 절차는 [DEPLOY.md](DEPLOY.md) 참고.
+
+1. GitHub 저장소 → **Settings → Secrets and variables → Actions**
+   - `OPENCODE_API_KEY` (필수)
    - `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` (선택)
    - `THESPORTSDB_API_KEY` (선택)
-   - `CLOUDFLARE_API_TOKEN` (Pages Edit 권한)
-   - `CLOUDFLARE_ACCOUNT_ID`
-4. (선택) **Variables**
-   - `CLOUDFLARE_PROJECT_NAME` (기본 `roma-daily`)
-   - `OPENCODE_MODEL` (기본 `deepseek-v4.1-flash`)
-   - `OPENCODE_BASE_URL` (Console을 쓸 때만)
-   - `REDDIT_USER_AGENT`
-5. **Actions → Roma feed → Run workflow**
+2. **Settings → Pages → Build and deployment → Source**: `GitHub Actions`
+3. **Actions → Roma feed → Run workflow**
 
-자동 실행은 UTC `22:00` = **KST 07:00** 하루 1회입니다. `feed.yml`의 cron을 고치면 됩니다.
-
-> GitHub Pages를 같이 쓰려면 Variable `DEPLOY_GITHUB_PAGES=true`를 추가하고 Settings → Pages Source를 `GitHub Actions`로 설정하세요.
+자동 실행은 UTC `22:00` = **KST 07:00** 하루 1회입니다. `feed.yml`의 cron을 고치면 됩니다. `main` 브랜치에 push해도 한 번 실행됩니다.
 
 - `data/articles.json`, `data/cache.json`, `data/youtube_channels.json`은 Actions 캐시로 실행 간 유지됩니다.
 - 캐시가 날아가도 다음 수집 분부터 다시 쌓이므로 사이트가 깨지지는 않습니다.
 - 생성물을 저장소에 커밋하지 않습니다(`.gitignore`).
-- Cloudflare Pages는 정적 파일만 호스팅하고, 빌드·번역은 GitHub Actions에서 합니다.
+- GitHub Pages는 정적 파일만 호스팅하고, 빌드·번역은 GitHub Actions에서 합니다.
+- 나중에 Cloudflare Pages를 추가할 수도 있습니다.
 
 ---
 
