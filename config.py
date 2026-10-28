@@ -365,10 +365,22 @@ YOUTUBE_CHANNELS = [
 OPENCODE_BASE_URL = os.getenv(
     "OPENCODE_BASE_URL", "https://opencode.ai/inference/go/openai/v1"
 ).rstrip("/")
-OPENCODE_MODEL = os.getenv("OPENCODE_MODEL", "deepseek-v4.1-flash")
-OPENCODE_REASONING_EFFORT = os.getenv("OPENCODE_REASONING_EFFORT", "none")
-OPENCODE_API_KEY = os.getenv("OPENCODE_API_KEY") or os.getenv("OPENCODE_KEY")
-OPENCODE_SESSION = os.getenv("OPENCODE_SESSION", "seriea-feed")
+OPENCODE_MODEL = os.getenv("OPENCODE_MODEL", "deepseek-v4.1-flash").strip()
+OPENCODE_REASONING_EFFORT = os.getenv("OPENCODE_REASONING_EFFORT", "none").strip()
+OPENCODE_SESSION = os.getenv("OPENCODE_SESSION", "seriea-feed").strip()
+
+
+def _clean_secret(value: str | None) -> str:
+    """붙여넣기 실수(공백·따옴표·변수명 포함)를 정리한다."""
+    if not value:
+        return ""
+    value = value.strip().strip('"').strip("'").strip()
+    if value.startswith("OPENCODE_API_KEY="):
+        value = value.split("=", 1)[1].strip().strip('"').strip("'").strip()
+    return value
+
+
+OPENCODE_API_KEY = _clean_secret(os.getenv("OPENCODE_API_KEY") or os.getenv("OPENCODE_KEY"))
 
 # 번역 캐시/프롬프트가 바뀌면 올려서 전체 재번역을 유도한다.
 PROMPT_VERSION = "v1"

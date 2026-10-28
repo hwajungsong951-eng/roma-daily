@@ -52,6 +52,22 @@ jobs:
           fi
           echo "OPENCODE_API_KEY is set (${#OPENCODE_API_KEY} characters)."
 
+      - name: Validate translation key
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        run: |
+          python - <<'PY'
+          from processor import LLM
+
+          llm = LLM()
+          print(f"Cleaned key length: {len(llm.api_key)}")
+          if not llm.api_key.startswith("oc_sk_"):
+              print("::error title=Invalid OPENCODE_API_KEY::The secret must start with oc_sk_ and contain only the key value.")
+              raise SystemExit(1)
+          reply = llm.chat("You are a connection test.", "Reply with OK.", max_tokens=5)
+          print(f"API test OK: {reply[:20]}")
+          PY
+
       - name: Fetch, translate, build
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
