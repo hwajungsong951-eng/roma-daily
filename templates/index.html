@@ -237,16 +237,27 @@
   .card.open .expand-btn .chev { transform: rotate(180deg); }
   .orig-link { margin-left: auto; color: var(--muted); font-size: 12px; font-weight: 650; }
   .orig-link:hover { color: var(--text); }
-  .card-body { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .card-body { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
   .card.open .card-body { display: block; }
   .body-note {
-    font-size: 12px; color: #8a5a00; background: #fff8e1; border-radius: 8px;
-    padding: 8px 10px; margin-bottom: 12px;
+    max-width: 720px; margin: 0 auto 18px;
+    font-size: 12.5px; line-height: 1.65; color: #8a5a00; background: #fff8e1;
+    border-radius: 9px; padding: 9px 12px;
   }
   [data-theme="dark"] .body-note { color: #e9c46a; background: #2c2410; }
   .body-note.trans { color: var(--accent); background: var(--accent-soft); }
-  .body-text p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.8; }
+  .body-text {
+    max-width: 720px; margin: 0 auto;
+    font-size: 16px; line-height: 1.95; letter-spacing: -.01em;
+    word-break: keep-all; overflow-wrap: anywhere; text-wrap: pretty;
+  }
+  .body-text p { margin: 0 0 1.1em; }
+  .body-text p.lead { font-size: 16.5px; color: var(--text); }
   .body-text p:last-child { margin-bottom: 0; }
+  .body-foot {
+    max-width: 720px; margin: 18px auto 0; padding-top: 12px;
+    border-top: 1px dashed var(--line); text-align: right;
+  }
   .comments { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
   .comments-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   .comments-head h4 { margin: 0; font-size: 13px; }
@@ -517,6 +528,45 @@ function badge(item) {
   return list.length ? `<div class="top-badges">${list.join("")}</div>` : "";
 }
 
+function formatBodyText(raw) {
+  const paragraphs = String(raw || "")
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const chunks = [];
+
+  paragraphs.forEach((paragraph, index) => {
+    // 인터뷰 Q&A나 짧은 문단은 그대로 둔다.
+    const isQa = /^(Q|A|질문|답변|기자|감독|선수)[.:]/i.test(paragraph);
+    if (paragraph.length <= 320 || isQa) {
+      chunks.push({ text: paragraph, lead: index === 0 });
+      return;
+    }
+
+    const sentences = paragraph.match(/[^.!?…]+[.!?…]+[”’"')]*|[^.!?…]+$/g) || [paragraph];
+    let buffer = "";
+    const parts = [];
+    sentences.forEach((sentence) => {
+      const next = sentence.trim();
+      if (!next) return;
+      if (buffer && `${buffer} ${next}`.length > 260) {
+        parts.push(buffer);
+        buffer = next;
+      } else {
+        buffer = buffer ? `${buffer} ${next}` : next;
+      }
+    });
+    if (buffer) parts.push(buffer);
+    parts.forEach((part, partIndex) => {
+      chunks.push({ text: part, lead: index === 0 && partIndex === 0 });
+    });
+  });
+
+  return chunks
+    .map(({ text, lead }) => `<p${lead ? ' class="lead"' : ""}>${esc(text)}</p>`)
+    .join("");
+}
+
 function card(item) {
   const meta = sources[item.source] || { label: item.source_label, color: "#888" };
   const tags = (item.tags || []).map((tag) => `<span class="mini-chip">${esc(tag)}</span>`).join("");
@@ -525,7 +575,7 @@ function card(item) {
     ? `<img class="thumb" src="${safeUrl(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`
     : "";
   const isOpen = openCards.has(item.id);
-  const body = (item.body_ko || "").split(/\n+/).filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join("");
+  const body = formatBodyText(item.body_ko);
   const comments = (item.comments || [])
     .map((comment) => ({ ...comment, text: comment.body_ko || comment.body }))
     .filter((comment) => comment.text);
@@ -563,9 +613,10 @@ function card(item) {
       <a class="orig-link" href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">원문 ↗</a>
     </div>
     <div class="card-body">
-      ${item.translated ? '<div class="body-note trans">AI 번역 · 원문의 약 80% 분량을 옮겼어요. 오역은 원문에서 확인해 주세요.</div>' : '<div class="body-note">아직 번역 전이에요. 아래는 원문(이탈리아어/영어)입니다.</div>'}
+      ${item.translated ? '<div class="body-note trans">AI 번역 · 원문 본문을 한국어로 옮겼습니다. 선수 이름과 전술 용어는 한국어 표기를 따릅니다.</div>' : '<div class="body-note">아직 번역 전이에요. 아래는 원문(이탈리아어/영어)입니다.</div>'}
       <div class="body-text">${body || '<p class="muted">본문이 제공되지 않은 글입니다. 원문에서 확인해 주세요.</p>'}</div>
       ${commentHtml}
+      <div class="body-foot"><button class="expand-btn" type="button" data-expand="${esc(item.id)}">본문 접기 <span class="chev">⌃</span></button></div>
     </div>
   </article>`;
 }
