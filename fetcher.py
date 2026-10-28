@@ -146,6 +146,9 @@ def article_body_from_html(page: str) -> str:
         "[data-element='paragraph']",
         ".article-body p",
         ".article__body p",
+        ".art-desc p",
+        ".entry-content p",
+        ".post-content p",
         ".content p",
         "main p",
     ]
@@ -154,7 +157,11 @@ def article_body_from_html(page: str) -> str:
         paragraphs = []
         for node in soup.select(selector):
             text = node.get_text(" ", strip=True)
-            if len(text) >= 30 and not re.search(r"(cookie|abbonat|newsletter)", text, re.I):
+            if len(text) >= 30 and not re.search(
+                r"(cookie|abbonat|newsletter|devi essere connesso|invia un commento|ti potrebbe interessare|leggi anche)",
+                text,
+                re.I,
+            ):
                 paragraphs.append(text)
         candidate = "\n\n".join(paragraphs)
         if len(candidate) > len(best):

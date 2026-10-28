@@ -247,6 +247,22 @@ def select_for_run(
         for item in previous
         if item.get("translated") or item.get("original_only")
     }
+    previous_by_id = {item["id"]: item for item in previous}
+
+    def already_done(article: dict) -> bool:
+        if article["id"] not in done_ids:
+            return False
+        prev = previous_by_id.get(article["id"])
+        if not prev:
+            return True
+        new_len = len(article.get("body") or "")
+        old_len = len(prev.get("body") or "")
+        # 원문 본문이 나중에 길게 보강된 경우 다시 번역한다.
+        return not (
+            new_len > old_len + 300
+            and new_len >= config.MIN_ARTICLE_BODY_CHARS
+        )
+
     pool_by_id = {article["id"]: article for article in raw}
     for item in previous:
         if not item.get("translated") and not item.get("original_only"):
@@ -255,7 +271,7 @@ def select_for_run(
     pool = [
         article
         for article in pool_by_id.values()
-        if article["id"] not in done_ids
+        if not already_done(article)
         and is_focus(article)
         and (article.get("source") == "youtube" or _is_first_team(article))
         and not _is_offtopic(article)
