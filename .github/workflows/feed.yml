@@ -42,6 +42,16 @@ jobs:
           restore-keys: |
             seriea-feed-
 
+      - name: Check translation key
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        run: |
+          if [ -z "$OPENCODE_API_KEY" ]; then
+            echo "::error title=OPENCODE_API_KEY missing::Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "OPENCODE_API_KEY is set (${#OPENCODE_API_KEY} characters)."
+
       - name: Fetch, translate, build
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
@@ -59,7 +69,11 @@ jobs:
           import json, pathlib
           p = pathlib.Path("data/articles.json")
           if p.exists():
-              print(json.dumps(json.loads(p.read_text(encoding="utf-8"))["stats"], ensure_ascii=False, indent=2))
+              stats = json.loads(p.read_text(encoding="utf-8"))["stats"]
+              print(json.dumps(stats, ensure_ascii=False, indent=2))
+              pending = stats.get("pending_total", 0)
+              if pending:
+                  print(f"::warning title=Translation pending::{pending} article(s) were not translated. Check OPENCODE_API_KEY.")
           PY
 
       - uses: actions/configure-pages@v5
