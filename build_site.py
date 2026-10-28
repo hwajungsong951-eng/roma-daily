@@ -75,6 +75,13 @@ def build_payload(items: list[dict], stats: dict | None = None) -> dict:
         or any(team in focus for team in item.get("team_ids") or [])
         or item.get("source") in config.FOCUS_SOURCES
     ]
+    video_limit = config.DAILY_QUOTAS.get("video", 4)
+    videos = sorted(
+        [item for item in items if item.get("kind") == "video"],
+        key=lambda item: item.get("published") or "",
+        reverse=True,
+    )[:video_limit]
+    items = [item for item in items if item.get("kind") != "video"] + videos
     sources = {
         key: {"label": meta["label"], "color": meta["color"]}
         for key, meta in config.SOURCES.items()

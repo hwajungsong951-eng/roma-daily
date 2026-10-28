@@ -571,6 +571,13 @@ def merge(previous: list[dict], new_items: list[dict], refreshed: dict[str, dict
         items.append(item)
 
     items, dropped = processor.dedupe_and_rank(items)
+    video_limit = config.DAILY_QUOTAS.get("video", 4)
+    videos = sorted(
+        [item for item in items if item.get("kind") == "video"],
+        key=lambda item: item.get("published") or "",
+        reverse=True,
+    )[:video_limit]
+    items = [item for item in items if item.get("kind") != "video"] + videos
     items = items[: config.MAX_ITEMS_TOTAL]
     log.info("병합: %s개 (중복 제거 %s)", len(items), dropped)
     return items
