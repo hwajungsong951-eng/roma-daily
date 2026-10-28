@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -14,6 +15,42 @@ import processor
 
 log = logging.getLogger("build_site")
 FEED_DATA_PLACEHOLDER = "__FEED_DATA__"
+
+# 모델이 가끔 고유명사를 중국어 한자로 섞어 쓴다. 사이트 표시 전에 바로잡는다.
+ZH_NAME_FIXES = {
+    "卡利亚里": "칼리아리",
+    "카利亚里": "칼리아리",
+    "카利亚리": "칼리아리",
+    "罗马": "로마",
+    "那不勒斯": "나폴리",
+    "国际米兰": "인터 밀란",
+    "AC米兰": "AC 밀란",
+    "尤文图斯": "유벤투스",
+    "拉齐奥": "라치오",
+    "亚特兰大": "아탈란타",
+    "佛罗伦萨": "피오렌티나",
+    "都灵": "토리노",
+    "博洛尼亚": "볼로냐",
+    "热那亚": "제노아",
+    "维罗纳": "베로나",
+    "乌迪内斯": "우디네세",
+    "莱切": "레체",
+    "萨索洛": "사수올로",
+    "科莫": "코모",
+    "蒙扎": "몬차",
+    "威尼斯": "베네치아",
+    "恩波利": "엠폴리",
+}
+
+
+def polish_korean(text: str) -> str:
+    if not text:
+        return text
+    for zh, ko in ZH_NAME_FIXES.items():
+        text = text.replace(zh, ko)
+    for ko in set(ZH_NAME_FIXES.values()):
+        text = re.sub(rf"{re.escape(ko)}\s*\(\s*{re.escape(ko)}\s*\)", ko, text)
+    return text
 
 
 def lean_item(item: dict) -> dict:
@@ -43,9 +80,9 @@ def lean_item(item: dict) -> dict:
         "source_label": item.get("source_label") or item["source"],
         "kind": item.get("kind", "news"),
         "title": item.get("title", ""),
-        "title_ko": item.get("title_ko") or item.get("title", ""),
-        "summary_ko": summary_ko,
-        "body_ko": body_ko,
+        "title_ko": polish_korean(item.get("title_ko") or item.get("title", "")),
+        "summary_ko": polish_korean(summary_ko),
+        "body_ko": polish_korean(body_ko),
         "url": item.get("url", ""),
         "published": item.get("published"),
         "author": item.get("author", ""),
